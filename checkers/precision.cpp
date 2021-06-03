@@ -9,19 +9,26 @@ const int READ_ERROR = 3; /* Can't open required files. */
 const int TOKEN_COUNT_ERROR = 4; /* Token count are different */
 
 int main(int args, const char *argv[]) {
-  if (args < 3) {
+  if (args <= 3) {
     return ARGV_ERROR;
   }
+  
   ifstream file_lhs = ifstream(argv[1]);
   ifstream file_rhs = ifstream(argv[2]);
   int p = stoi(argv[3]);
+  double err = 1;
+  for (int i = 0; i < p; i++) {
+    err /= 10;
+  }
+  
   if (!file_lhs.is_open() || !file_rhs.is_open()) {
     file_lhs.close();
     file_rhs.close();
     return READ_ERROR;
   }
-  string x;
-  vector<string> lhs, rhs;
+  
+  double x;
+  vector<double> lhs, rhs;
   while (file_lhs >> x) {
     lhs.push_back(x);
   }
@@ -30,12 +37,18 @@ int main(int args, const char *argv[]) {
   }
   file_lhs.close();
   file_rhs.close();
+  
   if ((int) lhs.size() != (int) rhs.size()) {
     return TOKEN_COUNT_ERROR;
   }
+  
+  auto ok = [&] (double a, double b) {
+    return fabs(a - b) <= err;
+  };
+  
   int n = (int) lhs.size();
   for (int i = 0; i < n; i++) {
-    if (lhs[i] != rhs[i]) {
+    if (ok(lhs[i], rhs[i]) == false) {
       return FAILURE;
     }
   }
