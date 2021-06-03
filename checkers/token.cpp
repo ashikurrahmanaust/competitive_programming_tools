@@ -12,6 +12,7 @@ int main(int args, const char *argv[]) {
   if (args <= 2) {
     return ARGV_ERROR;
   }
+  
   ifstream file_lhs = ifstream(argv[1]);
   ifstream file_rhs = ifstream(argv[2]);
   if (!file_lhs.is_open() || !file_rhs.is_open()) {
@@ -19,6 +20,7 @@ int main(int args, const char *argv[]) {
     file_rhs.close();
     return READ_ERROR;
   }
+  
   string x;
   vector<string> lhs, rhs;
   while (file_lhs >> x) {
@@ -27,8 +29,10 @@ int main(int args, const char *argv[]) {
   while (file_rhs >> x) {
     rhs.push_back(x);
   }
+  
   file_lhs.close();
   file_rhs.close();
+  
   if ((int) lhs.size() != (int) rhs.size()) {
     return TOKEN_COUNT_ERROR;
   }
